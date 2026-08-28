@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Lighthouse | Macabalan National High School</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+  <style>
+    :root {
+      --bg-yellow: #fff9d6;
+      --card-white: #ffffff;
+      --primary-yellow: #fef0a3;
+      --border-yellow: #ebd36e;
+      --dark-green: #114b16;
+      --accent-green: #258f2a;
+      --text-green: #114b16;
+      --text-muted: #1f6f24;
+      --max-width: 1200px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Merriweather', serif; background-color: var(--bg-yellow); color: var(--text-green); line-height: 1.7; }
+
+    .utility-bar { background-color: var(--primary-yellow); color: var(--dark-green); font-family: 'Open Sans', sans-serif; font-weight: 600; font-size: 0.8rem; padding: 0.4rem 1rem; border-bottom: 2px solid var(--border-yellow); }
+    .utility-container { max-width: var(--max-width); margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+
+    header { background-color: var(--primary-yellow); color: var(--dark-green); padding: 1.8rem 1rem 1.5rem 1rem; text-align: center; border-bottom: 5px solid var(--border-yellow); }
+    .site-logo { max-width: 100%; height: auto; max-height: 95px; object-fit: contain; }
+    header p { font-family: 'Open Sans', sans-serif; font-size: 0.95rem; color: var(--accent-green); font-weight: 700; margin-top: 0.5rem; letter-spacing: 1px; }
+
+    nav { background-color: var(--primary-yellow); position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 5px rgba(0,0,0,0.05); font-family: 'Open Sans', sans-serif; border-bottom: 2px solid var(--border-yellow); }
+    .nav-container { max-width: var(--max-width); margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 1rem; }
+    .nav-links { display: flex; list-style: none; gap: 5px; flex-wrap: wrap; }
+    .nav-links a { color: var(--dark-green); text-decoration: none; font-weight: 700; font-size: 0.88rem; padding: 0.8rem 0.8rem; display: block; cursor: pointer; }
+    .nav-links a:hover, .nav-links a.active { background-color: var(--border-yellow); color: var(--dark-green); }
+
+    .search-box input { padding: 0.4rem 0.8rem; border-radius: 4px; border: 2px solid var(--border-yellow); font-family: 'Open Sans', sans-serif; font-size: 0.85rem; color: var(--dark-green); outline: none; }
+
+    .container { max-width: var(--max-width); margin: 2rem auto; padding: 0 1rem; display: grid; grid-template-columns: 2.8fr 1.2fr; gap: 2.5rem; }
+
+    .featured-article { background: var(--card-white); border: 2px solid var(--border-yellow); border-top: 6px solid var(--accent-green); margin-bottom: 2.5rem; padding: 1.5rem; cursor: pointer; }
+    .featured-article img { width: 100%; max-height: 420px; object-fit: cover; margin-bottom: 1rem; border: 1px solid var(--border-yellow); }
+    .badge { background-color: var(--primary-yellow); color: var(--dark-green); border: 1px solid var(--border-yellow); font-family: 'Open Sans', sans-serif; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; padding: 0.2rem 0.6rem; display: inline-block; margin-bottom: 0.5rem; }
+    .featured-article h2 { font-size: 2.2rem; line-height: 1.3; margin-bottom: 0.5rem; color: var(--dark-green); }
+
+    .news-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .article-card { background: var(--card-white); padding: 1.2rem; border: 2px solid var(--border-yellow); border-top: 4px solid var(--accent-green); display: flex; flex-direction: column; cursor: pointer; }
+    .article-card h3 { font-size: 1.3rem; margin-bottom: 0.5rem; line-height: 1.3; color: var(--dark-green); }
+    .article-meta { font-family: 'Open Sans', sans-serif; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.8rem; }
+    .article-card img { width: 100%; height: 180px; object-fit: cover; margin-bottom: 0.8rem; border: 1px solid var(--border-yellow); }
+    .article-excerpt { font-size: 0.9rem; color: var(--dark-green); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .read-more-link { font-family: 'Open Sans', sans-serif; font-size: 0.85rem; font-weight: bold; color: var(--accent-green); margin-top: auto; padding-top: 0.8rem; }
+
+    aside { font-family: 'Open Sans', sans-serif; }
+    .sidebar-widget { background: var(--card-white); padding: 1.2rem; border: 2px solid var(--border-yellow); margin-bottom: 2rem; }
+    .sidebar-widget h3 { color: var(--dark-green); font-size: 1.1rem; text-transform: uppercase; border-bottom: 3px solid var(--accent-green); padding-bottom: 0.4rem; margin-bottom: 1rem; }
+    .about-text { font-size: 0.88rem; color: var(--dark-green); }
+
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(17, 75, 22, 0.7); display: none; justify-content: center; align-items: center; z-index: 2000; padding: 1rem; }
+    .modal-content { background: #ffffff; max-width: 800px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 2.5rem; position: relative; border: 3px solid var(--border-yellow); border-top: 8px solid var(--accent-green); }
+    .close-modal-btn { position: absolute; top: 1rem; right: 1.2rem; background: none; border: none; font-size: 2rem; cursor: pointer; color: var(--dark-green); }
+    .modal-img { width: 100%; max-height: 400px; object-fit: cover; margin: 1.2rem 0; border: 2px solid var(--border-yellow); }
+    .modal-body-content { font-size: 1.05rem; line-height: 1.8; color: var(--dark-green); }
+    .modal-body-content p { margin-bottom: 1.2rem; }
+
+    footer { background-color: var(--primary-yellow); color: var(--dark-green); text-align: center; padding: 2rem 1rem; font-family: 'Open Sans', sans-serif; font-size: 0.85rem; font-weight: 600; margin-top: 3rem; border-top: 4px solid var(--border-yellow); }
+
+    @media (max-width: 850px) {
+      .container { grid-template-columns: 1fr; }
+      .news-grid { grid-template-columns: 1fr; }
+      .nav-container { flex-direction: column; gap: 10px; padding: 0.8rem; }
+      .modal-content { padding: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="utility-bar">
+    <div class="utility-container">
+      <span id="currentDate"></span>
+      <span>Macabalan National High School, Cagayan de Oro City</span>
+    </div>
+  </div>
+
+  <header>
+    <img src="logo.png" alt="The Lighthouse" class="site-logo">
+    <p>The Official Student Publication of Macabalan National High School</p>
+  </header>
+
+  <nav>
+    <div class="nav-container">
+      <ul class="nav-links">
+        <li><a class="active" onclick="filterCategory('all', this)">Home</a></li>
+        <li><a onclick="filterCategory('Editorial', this)">Editorial</a></li>
+        <li><a onclick="filterCategory('News', this)">News</a></li>
+        <li><a onclick="filterCategory('Feature', this)">Feature</a></li>
+        <li><a onclick="filterCategory('Science & Health', this)">Science & Health</a></li>
+        <li><a onclick="filterCategory('Sports', this)">Sports</a></li>
+        <li><a onclick="filterCategory('Literary', this)">Literary</a></li>
+      </ul>
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Search stories..." onkeyup="searchArticles()">
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <main>
+      <section id="featuredSection"></section>
+      <section class="news-grid" id="newsFeed">
+        <p style="font-family: 'Open Sans', sans-serif; color: var(--dark-green);">Loading stories...</p>
+      </section>
+    </main>
+
+    <aside>
+      <div class="sidebar-widget">
+        <h3>About The Lighthouse</h3>
+        <p class="about-text">
+          <strong>The Lighthouse</strong> is the independent student publication of Macabalan National High School. Dedicated to illuminate and guide you to the truth.
+        </p>
+      </div>
+
+      <div class="sidebar-widget">
+        <h3>Editorial Portal</h3>
+        <p class="about-text" style="margin-bottom: 0.8rem;">Authorized student journalists and editors can post stories here.</p>
+        <a href="portal.html" style="display: block; text-align: center; background: var(--accent-green); color: #ffffff; padding: 0.6rem; text-decoration: none; font-weight: bold; border-radius: 3px;">Writer Login</a>
+      </div>
+    </aside>
+  </div>
+
+  <div id="articleModal" class="modal-overlay" onclick="closeModalOnBackdrop(event)">
+    <div class="modal-content">
+      <button class="close-modal-btn" onclick="closeModal()">&times;</button>
+      <span id="modalCategory" class="badge">Category</span>
+      <h1 id="modalTitle" style="font-size: 2rem; margin-top: 0.5rem; color: var(--dark-green);">Title</h1>
+      <div id="modalMeta" class="article-meta" style="margin-top: 0.4rem;">By Author • Date</div>
+      <img id="modalImg" class="modal-img" src="" alt="Article Banner" style="display:none;" />
+      <div id="modalBody" class="modal-body-content"></div>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 The Lighthouse — Macabalan National High School. All Rights Reserved.</p>
+  </footer>
+
+  <script>
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', options);
+
+    let allArticles = [];
+
+    async function loadArticles() {
+      try {
+        const response = await fetch('./articles.json?cache_bypass=' + Date.now());
+        allArticles = await response.json();
+      } catch (err) {
+        console.error("Could not load articles.json", err);
+        allArticles = [];
+      }
+      renderFeed(allArticles);
+    }
+
+    function renderFeed(articles) {
+      const featuredSec = document.getElementById('featuredSection');
+      const feedGrid = document.getElementById('newsFeed');
+
+      featuredSec.innerHTML = '';
+      feedGrid.innerHTML = '';
+
+      if (articles.length === 0) {
+        feedGrid.innerHTML = `<p style="font-family:'Open Sans'; color: var(--dark-green);">No articles published in this section yet.</p>`;
+        return;
+      }
+
+      const hero = articles[0];
+      const heroOriginalIndex = allArticles.indexOf(hero);
+      featuredSec.innerHTML = `
+        <article class="featured-article" onclick="openArticle(${heroOriginalIndex})">
+          <span class="badge">${hero.category}</span>
+          <h2>${hero.title}</h2>
+          <div class="article-meta">By <strong>${hero.author}</strong> — ${hero.date}</div>
+          ${hero.image ? `<img src="${hero.image}" alt="${hero.title}">` : ''}
+          <div class="article-excerpt">${marked.parse((hero.body || '').substring(0, 280) + '...')}</div>
+          <div class="read-more-link">Read Full Story &rarr;</div>
+        </article>
+      `;
+
+      const gridArticles = articles.slice(1);
+      gridArticles.forEach(art => {
+        const originalIndex = allArticles.indexOf(art);
+        const card = document.createElement('article');
+        card.className = 'article-card';
+        card.onclick = () => openArticle(originalIndex);
+        card.innerHTML = `
+          <span class="badge">${art.category}</span>
+          ${art.image ? `<img src="${art.image}" alt="${art.title}">` : ''}
+          <h3>${art.title}</h3>
+          <div class="article-meta">By ${art.author} • ${art.date}</div>
+          <div class="article-excerpt">${marked.parse((art.body || '').substring(0, 120) + '...')}</div>
+          <div class="read-more-link">Read Full Story &rarr;</div>
+        `;
+        feedGrid.appendChild(card);
+      });
+    }
+
+    function openArticle(index) {
+      const art = allArticles[index];
+      if (!art) return;
+
+      document.getElementById('modalCategory').textContent = art.category;
+      document.getElementById('modalTitle').textContent = art.title;
+      document.getElementById('modalMeta').textContent = `By ${art.author} • ${art.date}`;
+      document.getElementById('modalBody').innerHTML = marked.parse(art.body || '');
+
+      const modalImg = document.getElementById('modalImg');
+      if (art.image) {
+        modalImg.src = art.image;
+        modalImg.style.display = 'block';
+      } else {
+        modalImg.style.display = 'none';
+      }
+
+      document.getElementById('articleModal').style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      document.getElementById('articleModal').style.display = 'none';
+      document.body.style.overflow = 'auto';
+    }
+
+    function closeModalOnBackdrop(e) {
+      if (e.target.id === 'articleModal') closeModal();
+    }
+
+    function filterCategory(cat, btnElement) {
+      document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+      if (btnElement) btnElement.classList.add('active');
+
+      if (cat === 'all') {
+        renderFeed(allArticles);
+      } else {
+        const filtered = allArticles.filter(a => a.category.toLowerCase() === cat.toLowerCase());
+        renderFeed(filtered);
+      }
+    }
+
+    function searchArticles() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      const matched = allArticles.filter(a => 
+        (a.title || '').toLowerCase().includes(query) || 
+        (a.body || '').toLowerCase().includes(query) ||
+        (a.author || '').toLowerCase().includes(query)
+      );
+      renderFeed(matched);
+    }
+
+    loadArticles();
+  </script>
+</body>
+</html>
