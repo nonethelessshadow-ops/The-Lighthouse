@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Lighthouse | Writer & Editor Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-yellow: #fef0a3;
+      --light-yellow: #fff9d6;
+      --border-yellow: #ebd36e;
+      --dark-green: #114b16;
+      --accent-green: #258f2a;
+      --card-bg: #ffffff;
+      --text-green: #114b16;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Open Sans', sans-serif; background-color: var(--light-yellow); color: var(--text-green); padding: 1rem; }
+    .container { max-width: 850px; margin: 2rem auto; }
+    header { background: var(--primary-yellow); color: var(--dark-green); padding: 1.5rem; text-align: center; border-radius: 6px 6px 0 0; border: 2px solid var(--border-yellow); border-bottom: none; }
+    .site-logo { max-width: 100%; height: auto; max-height: 80px; object-fit: contain; }
+    header p { font-size: 0.85rem; font-weight: 700; color: var(--accent-green); margin-top: 0.4rem; }
+    .card { background: var(--card-bg); padding: 2rem; border: 2px solid var(--border-yellow); border-radius: 0 0 6px 6px; box-shadow: 0 4px 10px rgba(37, 143, 42, 0.08); margin-bottom: 1.5rem; }
+    .form-group { margin-bottom: 1.2rem; }
+    label { display: block; font-weight: 700; margin-bottom: 0.4rem; font-size: 0.9rem; color: var(--dark-green); }
+    input[type="text"], input[type="password"], input[type="file"], select, textarea { width: 100%; padding: 0.75rem; border: 2px solid var(--border-yellow); border-radius: 4px; font-family: inherit; font-size: 0.95rem; background-color: #ffffff; color: var(--dark-green); }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent-green); }
+    button { width: 100%; background: var(--accent-green); color: #ffffff; border: none; padding: 0.8rem; font-weight: 700; font-size: 1rem; border-radius: 4px; cursor: pointer; transition: background 0.2s; }
+    button:hover { background: #1f6f24; }
+    button:disabled { background: #888888; cursor: not-allowed; }
+    .btn-secondary { background: #f0f0f0; color: var(--dark-green); border: 1px solid #ccc; margin-top: 0.5rem; }
+    #dashboardPanel { display: none; }
+    .status-bar { background: var(--light-yellow); border: 2px solid var(--border-yellow); padding: 0.8rem 1rem; display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-radius: 4px; color: var(--dark-green); }
+    .logout-btn { width: auto; background: #c62828; color: #ffffff; border: none; padding: 0.4rem 0.8rem; font-size: 0.85rem; }
+    .error-msg { color: #c62828; font-size: 0.85rem; margin-top: 0.5rem; display: none; }
+    .image-preview { max-width: 100%; max-height: 200px; margin-top: 0.5rem; display: none; border-radius: 4px; object-fit: cover; border: 2px solid var(--border-yellow); }
+    .section-title { color: var(--dark-green); border-bottom: 3px solid var(--accent-green); padding-bottom: 0.4rem; margin-bottom: 1rem; font-size: 1.2rem; }
+    .article-item { display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 0; border-bottom: 1px solid var(--border-yellow); }
+    .article-item-info strong { display: block; font-size: 1rem; color: var(--dark-green); }
+    .article-item-info span { font-size: 0.8rem; color: var(--accent-green); }
+    .article-actions { display: flex; gap: 6px; }
+    .btn-edit { background: var(--primary-yellow); color: var(--dark-green); border: 1px solid var(--border-yellow); width: auto; padding: 0.4rem 0.7rem; font-size: 0.8rem; }
+    .btn-delete { background: #d32f2f; color: #ffffff; border: none; width: auto; padding: 0.4rem 0.7rem; font-size: 0.8rem; }
+    .badge-admin { background: var(--dark-green); color: var(--primary-yellow); font-size: 0.7rem; padding: 0.1rem 0.4rem; border-radius: 3px; text-transform: uppercase; font-weight: bold; }
+    .badge-owner { background: var(--primary-yellow); color: var(--dark-green); font-size: 0.7rem; padding: 0.1rem 0.4rem; border-radius: 3px; text-transform: uppercase; font-weight: bold; border: 1px solid var(--border-yellow); }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <img src="logo.png" alt="The Lighthouse Logo" class="site-logo">
+      <p>Student Publication Publishing & Management Portal</p>
+    </header>
+
+    <div id="loginPanel" class="card">
+      <form id="loginForm" onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" id="username" placeholder="Enter assigned username" required>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" placeholder="Enter password" required>
+        </div>
+        <button type="submit">Log In to Editor</button>
+        <p id="errorMsg" class="error-msg">Invalid username or password.</p>
+      </form>
+    </div>
+
+    <div id="dashboardPanel">
+      <div class="card" style="border-radius: 0 0 6px 6px;">
+        <div class="status-bar">
+          <span>Logged in as: <strong id="userDisplay">Writer</strong> <span id="roleBadge"></span></span>
+          <div>
+            <a href="index.html" style="font-size: 0.85rem; margin-right: 1rem; color: var(--dark-green); text-decoration: none; font-weight: bold;">View Website &rarr;</a>
+            <button class="logout-btn" onclick="handleLogout()">Log Out</button>
+          </div>
+        </div>
+
+        <h2 id="formHeading" class="section-title">Create New Article</h2>
+
+        <form id="publishForm" onsubmit="handlePublish(event)">
+          <input type="hidden" id="editingArticleId" value="">
+          <div class="form-group">
+            <label for="articleTitle">Article Title</label>
+            <input type="text" id="articleTitle" placeholder="Heading..." required>
+          </div>
+          <div class="form-group">
+            <label for="articleAuthor">Author Display Name</label>
+            <input type="text" id="articleAuthor" placeholder="Student Journalist Name" required>
+          </div>
+          <div class="form-group">
+            <label for="articleCategory">Category</label>
+            <select id="articleCategory">
+              <option value="Editorial">Editorial</option>
+              <option value="News">News</option>
+              <option value="Feature">Feature</option>
+              <option value="Science & Health">Science & Health</option>
+              <option value="Sports">Sports</option>
+              <option value="Literary">Literary</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="articleImageFile">Upload Banner Image (Optional)</label>
+            <input type="file" id="articleImageFile" accept="image/*" onchange="previewImage(event)">
+            <img id="imgPreview" class="image-preview" alt="Image preview">
+          </div>
+          <div class="form-group">
+            <label for="articleBody">Article Content (Markdown supported)</label>
+            <textarea id="articleBody" rows="8" placeholder="Write your story here..." required></textarea>
+          </div>
+          <button type="submit" id="submitBtn">Publish Globally to Website</button>
+          <button type="button" id="cancelEditBtn" class="btn-secondary" style="display:none;" onclick="resetForm()">Cancel Editing</button>
+        </form>
+      </div>
+
+      <div class="card" style="border-radius: 6px;">
+        <h2 class="section-title">All Published Articles Across Writers</h2>
+        <div id="articlesList">
+          <p style="color: var(--accent-green); font-size:0.9rem;">Loading articles...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // GitHub Configurations (Update with your GitHub details)
+    const GH_CONFIG = {
+      username: "YOUR_GITHUB_USERNAME",
+      repo: "YOUR_REPOSITORY_NAME",
+      filePath: "articles.json",
+      token: "YOUR_GITHUB_PERSONAL_ACCESS_TOKEN"
+    };
+
+    const ACCOUNTS = {
+      "admin": "TorchLighthouse88",
+      "writer01": "GreenPaper12",
+      "writer02": "SilverInk45",
+      "writer03": "BoldPress79",
+      "writer04": "RapidNews31",
+      "writer05": "BrightPage64"
+    };
+
+    let uploadedImageData = "";
+    let cachedArticles = [];
+    let fileSha = "";
+
+    async function fetchGlobalArticles() {
+      const url = `https://api.github.com/repos/${nonethelessshadow-ops}/${The-Lighthouse}/contents/${articles.json}`;
+      try {
+        const res = await fetch(url, {
+          headers: { "Authorization": `token ${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}` }
+        });
+        const data = await res.json();
+        fileSha = data.sha;
+        const content = decodeURIComponent(escape(atob(data.content)));
+        cachedArticles = JSON.parse(content);
+        return cachedArticles;
+      } catch (err) {
+        console.error("Error fetching articles from GitHub:", err);
+        return [];
+      }
+    }
+
+    async function saveGlobalArticles(articles, commitMessage) {
+      const url = `https://api.github.com/repos/${GH_CONFIG.username}/${GH_CONFIG.repo}/contents/${GH_CONFIG.filePath}`;
+      const contentBase64 = btoa(unescape(encodeURIComponent(JSON.stringify(articles, null, 2))));
+
+      const body = {
+        message: commitMessage,
+        content: contentBase64,
+        sha: fileSha
+      };
+
+      const res = await fetch(url, {
+        method: "PUT",
+        headers: {
+          "Authorization": `token ${GH_CONFIG.token}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(body)
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to save changes to GitHub.");
+      }
+
+      const resData = await res.json();
+      fileSha = resData.content.sha;
+    }
+
+    function checkSession() {
+      const activeUser = localStorage.getItem("lighthouse_user");
+      if (activeUser) {
+        document.getElementById("loginPanel").style.display = "none";
+        document.getElementById("dashboardPanel").style.display = "block";
+        document.getElementById("userDisplay").textContent = activeUser;
+
+        const roleBadge = document.getElementById("roleBadge");
+        if (activeUser === "admin") {
+          roleBadge.className = "badge-admin";
+          roleBadge.textContent = "ADMIN";
+        } else {
+          roleBadge.className = "badge-owner";
+          roleBadge.textContent = "WRITER";
+        }
+        loadAndRenderArticles();
+      } else {
+        document.getElementById("loginPanel").style.display = "block";
+        document.getElementById("dashboardPanel").style.display = "none";
+      }
+    }
+
+    function handleLogin(e) {
+      e.preventDefault();
+      const user = document.getElementById("username").value.trim();
+      const pass = document.getElementById("password").value.trim();
+      const err = document.getElementById("errorMsg");
+
+      if (ACCOUNTS[user] && ACCOUNTS[user] === pass) {
+        localStorage.setItem("lighthouse_user", user);
+        err.style.display = "none";
+        checkSession();
+      } else {
+        err.style.display = "block";
+      }
+    }
+
+    function handleLogout() {
+      localStorage.removeItem("lighthouse_user");
+      resetForm();
+      checkSession();
+    }
+
+    function previewImage(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          uploadedImageData = e.target.result;
+          const imgPreview = document.getElementById("imgPreview");
+          imgPreview.src = uploadedImageData;
+          imgPreview.style.display = "block";
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    async function handlePublish(e) {
+      e.preventDefault();
+      const btn = document.getElementById("submitBtn");
+      btn.disabled = true;
+      btn.textContent = "Publishing live...";
+
+      const currentUser = localStorage.getItem("lighthouse_user");
+      const editingId = document.getElementById("editingArticleId").value;
+      
+      try {
+        let articles = await fetchGlobalArticles();
+
+        if (editingId) {
+          articles = articles.map(art => {
+            if (art.id === editingId) {
+              return {
+                ...art,
+                title: document.getElementById("articleTitle").value,
+                author: document.getElementById("articleAuthor").value,
+                category: document.getElementById("articleCategory").value,
+                body: document.getElementById("articleBody").value,
+                image: uploadedImageData || art.image
+              };
+            }
+            return art;
+          });
+          await saveGlobalArticles(articles, `Update article: ${document.getElementById("articleTitle").value}`);
+          alert("Article updated globally! Netlify is building the site now.");
+        } else {
+          const newArt = {
+            id: "art_" + Date.now(),
+            owner: currentUser,
+            title: document.getElementById("articleTitle").value,
+            author: document.getElementById("articleAuthor").value,
+            category: document.getElementById("articleCategory").value,
+            body: document.getElementById("articleBody").value,
+            image: uploadedImageData,
+            date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+          };
+          articles.unshift(newArt);
+          await saveGlobalArticles(articles, `Add new article: ${newArt.title}`);
+          alert("Article published globally! Netlify is building the updated site now.");
+        }
+
+        resetForm();
+        renderArticlesList(articles);
+      } catch (err) {
+        alert("Publish failed: " + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Publish Globally to Website";
+      }
+    }
+
+    async function loadAndRenderArticles() {
+      const articles = await fetchGlobalArticles();
+      renderArticlesList(articles);
+    }
+
+    function renderArticlesList(articles) {
+      const currentUser = localStorage.getItem("lighthouse_user");
+      const listContainer = document.getElementById("articlesList");
+
+      if (!articles || articles.length === 0) {
+        listContainer.innerHTML = `<p style="color:var(--accent-green); font-size:0.9rem;">No articles found.</p>`;
+        return;
+      }
+
+      listContainer.innerHTML = articles.map(art => {
+        const isEditable = (currentUser === "admin" || art.owner === currentUser);
+        return `
+          <div class="article-item">
+            <div class="article-item-info">
+              <strong>${escapeHtml(art.title)}</strong>
+              <span>By ${escapeHtml(art.author)} • ${art.category} • ${art.date} (Account: ${art.owner || 'unknown'})</span>
+            </div>
+            <div class="article-actions">
+              ${isEditable ? `
+                <button class="btn-edit" onclick="editArticle('${art.id}')">Edit</button>
+                <button class="btn-delete" onclick="deleteArticle('${art.id}')">Delete</button>
+              ` : `<span style="font-size:0.8rem; color:#888; align-self:center;">Read-Only</span>`}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function editArticle(id) {
+      const art = cachedArticles.find(a => a.id === id);
+      if (!art) return;
+
+      document.getElementById("editingArticleId").value = art.id;
+      document.getElementById("articleTitle").value = art.title;
+      document.getElementById("articleAuthor").value = art.author;
+      document.getElementById("articleCategory").value = art.category;
+      document.getElementById("articleBody").value = art.body;
+
+      if (art.image) {
+        uploadedImageData = art.image;
+        const imgPreview = document.getElementById("imgPreview");
+        imgPreview.src = art.image;
+        imgPreview.style.display = "block";
+      } else {
+        uploadedImageData = "";
+        document.getElementById("imgPreview").style.display = "none";
+      }
+
+      document.getElementById("formHeading").textContent = "Edit Article";
+      document.getElementById("submitBtn").textContent = "Save Changes Globally";
+      document.getElementById("cancelEditBtn").style.display = "block";
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    async function deleteArticle(id) {
+      const currentUser = localStorage.getItem("lighthouse_user");
+      let articles = await fetchGlobalArticles();
+      const art = articles.find(a => a.id === id);
+      if (!art) return;
+
+      if (currentUser !== "admin" && art.owner !== currentUser) {
+        alert("Permission denied: You can only delete your own articles.");
+        return;
+      }
+
+      if (confirm(`Are you sure you want to delete "${art.title}"?`)) {
+        articles = articles.filter(a => a.id !== id);
+        try {
+          await saveGlobalArticles(articles, `Delete article: ${art.title}`);
+          if (document.getElementById("editingArticleId").value === id) resetForm();
+          renderArticlesList(articles);
+          alert("Article deleted globally!");
+        } catch (err) {
+          alert("Deletion failed: " + err.message);
+        }
+      }
+    }
+
+    function resetForm() {
+      document.getElementById("publishForm").reset();
+      document.getElementById("editingArticleId").value = "";
+      document.getElementById("imgPreview").style.display = "none";
+      uploadedImageData = "";
+      document.getElementById("formHeading").textContent = "Create New Article";
+      document.getElementById("submitBtn").textContent = "Publish Globally to Website";
+      document.getElementById("cancelEditBtn").style.display = "none";
+    }
+
+    function escapeHtml(str) {
+      return (str || '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    }
+
+    checkSession();
+  </script>
+</body>
+</html>
